@@ -3,34 +3,43 @@ const test = require('ava')
 const {codify} = require('../_lib/utils')
 
 const config = {
-  'no_pending_tests': {
+  'no_global_tests': {
     'module': __dirname
   }
 }
 
-test('disallows pending tests', t => {
-  const methods = ['it', 'specify', 'test']
+test('disallows global tests', t => {
+  const methods = [
+    'it', 'it.only', 'it.skip',
+    'test', 'test.only', 'test.skip',
+    'specify', 'specify.only', 'specify.skip'
+  ]
 
   t.plan(methods.length * 3)
   methods.forEach(method => {
     const code = codify(`
-      ${method} 'pending'
+      ${method} 'pending', ->
     `)
     const errors = coffeelint.lint(code, config)
 
     t.is(errors.length, 1)
     t.is(errors[0].lineNumber, 1)
-    t.is(errors[0].message, 'Unexpected pending Mocha test')
+    t.is(errors[0].message, 'Unexpected global Mocha test')
   })
 })
 
-test('allows implemented tests', t => {
-  const methods = ['it', 'specify', 'test']
+test('allows scoped tests', t => {
+  const methods = [
+    'it', 'it.only', 'it.skip',
+    'test', 'test.only', 'test.skip',
+    'specify', 'specify.only', 'specify.skip'
+  ]
 
   t.plan(methods.length)
   methods.forEach(method => {
     const code = codify(`
-      ${method} 'implemented', ->
+      describe 'description', ->
+        ${method} 'implemented', ->
     `)
     const errors = coffeelint.lint(code, config)
 

@@ -9,7 +9,9 @@ module.exports = {
   isSkippedCall,
   isPendingTest,
   isCall,
-  isFunction
+  isScopeCall,
+  isFunction,
+  codify
 }
 
 function isAsyncTest (node) {
@@ -26,7 +28,11 @@ function isTestHasBody (node) {
 
 function isTestCall (node) {
   return isCall(node) &&
-    includesExactCall(node, ['it', 'it.only', 'specify', 'specify.only', 'test', 'test.only'])
+    includesExactCall(node, [
+      'it', 'it.only', 'it.skip',
+      'test', 'test.only', 'test.skip',
+      'specify', 'specify.only', 'specify.skip'
+    ])
 }
 
 function isSyncHook (node) {
@@ -75,6 +81,21 @@ function isExactCall (node, callStr) {
   return matchesHead && matchesLength && matchesChain
 }
 
+function isScopeCall (node) {
+  return isCall(node) &&
+    includesExactCall(node, [
+      'describe', 'describe.skip', 'xdescribe.skip', 'describe.only', 'xdescribe.only',
+      'xcontext', 'context.skip', 'xcontext.skip', 'context.only', 'xcontext.only',
+      'xsuite', 'suite.skip', 'xsuite.skip', 'suite.only', 'xsuite.only'
+    ])
+}
+
 function isFunction (node) {
   return node && node.constructor.name === 'Code'
+}
+
+function codify (str) {
+  const lines = str.split('\n').slice(1)
+  const baseIndent = lines[0].search(/[^\s]/)
+  return lines.map(line => line.slice(baseIndent)).join('\n')
 }
