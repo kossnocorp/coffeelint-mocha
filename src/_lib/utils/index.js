@@ -7,6 +7,7 @@ module.exports = {
   isHookHasBody,
   isHookCall,
   isSkippedCall,
+  isPendingTest,
   isCall,
   isFunction
 }
@@ -53,23 +54,27 @@ function isSkippedCall (node) {
     ])
 }
 
+function isPendingTest (node) {
+  return isTestCall(node) && !isTestHasBody(node)
+}
+
 function isCall (node) {
   return node.constructor.name === 'Call'
 }
 
-function includesExactCall(node, callStrs) {
+function includesExactCall (node, callStrs) {
   return callStrs.map(callStr => isExactCall(node, callStr)).includes(true)
 }
 
-function isExactCall(node, callStr) {
+function isExactCall (node, callStr) {
   const chain = callStr.split('.')
   const matchesHead = chain[0] === node.variable.base.value
-  const matchesLength = node.variable.properties.length == chain.length - 1
+  const matchesLength = node.variable.properties.length === chain.length - 1
   const matchesChain = node.variable.properties.map(p => p.name.value).join('.') === chain.slice(1).join('.')
 
   return matchesHead && matchesLength && matchesChain
 }
 
 function isFunction (node) {
-  return node.constructor.name === 'Code'
+  return node && node.constructor.name === 'Code'
 }
