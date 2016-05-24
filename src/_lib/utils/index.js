@@ -6,6 +6,7 @@ module.exports = {
   isSyncHook,
   isHookHasBody,
   isHookCall,
+  isSkippedCall,
   isCall,
   isFunction
 }
@@ -24,9 +25,7 @@ function isTestHasBody (node) {
 
 function isTestCall (node) {
   return isCall(node) &&
-    ['it', 'specify', 'test'].includes(node.variable.base.value) &&
-    (node.variable.properties.length === 0 ||
-     node.variable.properties.length === 1 && node.variable.properties[0].name.value === 'only')
+    includesExactCall(node, ['it', 'it.only', 'specify', 'specify.only', 'test', 'test.only'])
 }
 
 function isSyncHook (node) {
@@ -39,13 +38,36 @@ function isHookHasBody (node) {
 
 function isHookCall (node) {
   return isCall(node) &&
-    ['before', 'after', 'beforeEach', 'afterEach', 'suiteSetup', 'suiteTeardown', 'setup', 'teardown']
-      .includes(node.variable.base.value) &&
-    node.variable.properties.length === 0
+    includesExactCall(node, ['before', 'after', 'beforeEach', 'afterEach', 'suiteSetup', 'suiteTeardown', 'setup', 'teardown'])
+}
+
+function isSkippedCall (node) {
+  return isCall(node) &&
+    includesExactCall(node, [
+      'xit', 'it.skip', 'xit.skip',
+      'xspecify', 'specify.skip', 'xspecify.skip',
+      'xtest', 'test.skip', 'xtest.skip',
+      'xdescribe', 'describe.skip', 'xdescribe.skip',
+      'xcontext', 'context.skip', 'xcontext.skip',
+      'xsuite', 'suite.skip', 'xsuite.skip'
+    ])
 }
 
 function isCall (node) {
   return node.constructor.name === 'Call'
+}
+
+function includesExactCall(node, callStrs) {
+  return callStrs.map(callStr => isExactCall(node, callStr)).includes(true)
+}
+
+function isExactCall(node, callStr) {
+  const chain = callStr.split('.')
+  const matchesHead = chain[0] === node.variable.base.value
+  const matchesLength = node.variable.properties.length == chain.length - 1
+  const matchesChain = node.variable.properties.map(p => p.name.value).join('.') === chain.slice(1).join('.')
+
+  return matchesHead && matchesLength && matchesChain
 }
 
 function isFunction (node) {
