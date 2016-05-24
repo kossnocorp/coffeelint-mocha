@@ -7,6 +7,7 @@ module.exports = {
   isHookHasBody,
   isHookCall,
   isSkippedCall,
+  isExclusiveCall,
   isPendingTest,
   isCall,
   isScopeCall,
@@ -57,6 +58,18 @@ function isSkippedCall (node) {
       'xdescribe', 'describe.skip', 'xdescribe.skip',
       'xcontext', 'context.skip', 'xcontext.skip',
       'xsuite', 'suite.skip', 'xsuite.skip'
+    ])
+}
+
+function isExclusiveCall (node) {
+  return isCall(node) &&
+    includesExactCall(node, [
+      'it.only', 'xit.only',
+      'specify.only', 'xspecify.only',
+      'test.only', 'xtest.only',
+      'describe.only', 'xdescribe.only',
+      'context.only', 'xcontext.only',
+      'suite.only', 'xsuite.only',
     ])
 }
 

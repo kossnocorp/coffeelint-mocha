@@ -1,4 +1,5 @@
 module.exports = {
+  'no_exclusive_tests': require('./src/no_exclusive_tests'),
   'no_global_tests': require('./src/no_global_tests'),
   'no_pending_tests': require('./src/no_pending_tests'),
   'no_skipped_tests': require('./src/no_skipped_tests'),
