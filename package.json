@@ -1,0 +1,36 @@
+{
+  "name": "coffeelint-mocha",
+  "version": "0.1.0",
+  "description": "CoffeeLint rules for Mocha test framework",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard --verbose | snazzy",
+    "test": "nyc ava test.js src/**/test.js --source '!tmp'",
+    "test-watch": "npm test -- --watch",
+    "test-coverage-report": "nyc report --reporter=html",
+    "test-coverage-coveralls": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kossnocorp/coffeelint-mocha.git"
+  },
+  "keywords": [
+    "coffeelintrule",
+    "coffeelint",
+    "mocha"
+  ],
+  "author": "Sasha Koss <koss@nocorp.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kossnocorp/coffeelint-mocha/issues"
+  },
+  "homepage": "https://github.com/kossnocorp/coffeelint-mocha#readme",
+  "devDependencies": {
+    "ava": "^0.14.0",
+    "coffeelint": "^1.15.7",
+    "coveralls": "^2.11.9",
+    "nyc": "^6.4.4",
+    "snazzy": "^4.0.0",
+    "standard": "^7.1.0"
+  }
+}
