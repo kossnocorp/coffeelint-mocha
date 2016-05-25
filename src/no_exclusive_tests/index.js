@@ -1,4 +1,4 @@
-const {isExclusiveCall} = require('../_lib/utils')
+const {textify, isExclusiveCall} = require('../_lib/utils')
 
 module.exports = NoExclusiveTests
 
@@ -8,7 +8,7 @@ NoExclusiveTests.prototype.rule = {
   name: 'no_exclusive_tests',
   level: 'error',
   message: 'Unexpected exclusive Mocha test',
-  description: `
+  description: textify(`
     Mocha has a feature that allows you to run tests exclusively by appending
     .only to a test-suite or a test-case. This feature is really helpful
     to debug a failing test, so you don’t have to execute all of your tests.
@@ -16,7 +16,7 @@ NoExclusiveTests.prototype.rule = {
     have to remove .only to ensure all tests are executed on your build system.
     This rule reminds you to remove .only from your tests by raising a warning
     whenever you are using the exclusivity feature.
-  `.trim()
+  `)
 }
 
 NoExclusiveTests.prototype.lintAST = function (ast, astApi) {

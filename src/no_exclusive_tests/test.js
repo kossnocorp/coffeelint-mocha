@@ -1,6 +1,6 @@
 const coffeelint = require('coffeelint')
 const test = require('ava')
-const {codify} = require('../_lib/utils')
+const {textify} = require('../_lib/utils')
 
 const config = {
   'no_exclusive_tests': {
@@ -20,7 +20,7 @@ test('disallows exclusive tests and suites', t => {
 
   t.plan(methods.length * 3)
   methods.forEach(method => {
-    const code = codify(`
+    const code = textify(`
       ${method} 'description', ->
     `)
     const errors = coffeelint.lint(code, config)
@@ -36,7 +36,7 @@ test('allows regular tests', t => {
 
   t.plan(methods.length)
   methods.forEach(method => {
-    const code = codify(`
+    const code = textify(`
       ${method} 'description', ->
     `)
     const errors = coffeelint.lint(code, config)

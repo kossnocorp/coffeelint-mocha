@@ -1,6 +1,6 @@
 const coffeelint = require('coffeelint')
 const test = require('ava')
-const {codify} = require('../_lib/utils')
+const {textify} = require('../_lib/utils')
 
 const config = {
   'no_skipped_tests': {
@@ -20,7 +20,7 @@ test('disallows to skip tests', t => {
 
   t.plan(methods.length * 3)
   methods.forEach(method => {
-    const code = codify(`
+    const code = textify(`
       ${method} 'skipped', ->
     `)
     const errors = coffeelint.lint(code, config)
@@ -32,7 +32,7 @@ test('disallows to skip tests', t => {
 })
 
 test('ignores unknown constructions', t => {
-  const code = codify(`
+  const code = textify(`
     xit.trololo 'unknown construction', ->
   `)
   const errors = coffeelint.lint(code, config)

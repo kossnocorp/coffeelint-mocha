@@ -3,6 +3,7 @@ module.exports = {
   isSyncTest,
   isTestHasBody,
   isTestCall,
+  isAsyncHook,
   isSyncHook,
   isHookHasBody,
   isHookCall,
@@ -11,8 +12,12 @@ module.exports = {
   isPendingTest,
   isCall,
   isScopeCall,
+  isAsyncCallbackCall,
+  isCallWithAsyncCallbackInArgs,
   isFunction,
-  codify
+  getAsyncCallbackName,
+  getMochaMethodBody,
+  textify
 }
 
 function isAsyncTest (node) {
@@ -34,6 +39,10 @@ function isTestCall (node) {
       'test', 'test.only', 'test.skip',
       'specify', 'specify.only', 'specify.skip'
     ])
+}
+
+function isAsyncHook (node) {
+  return isHookCall(node) && isHookHasBody(node) && !!node.args[0].params[0]
 }
 
 function isSyncHook (node) {
@@ -103,12 +112,33 @@ function isScopeCall (node) {
     ])
 }
 
+function isAsyncCallbackCall (node, asyncCallbackName) {
+  return isCall(node) && isExactCall(node, asyncCallbackName)
+}
+
+function isCallWithAsyncCallbackInArgs (node, asyncCallbackName) {
+  return isCall(node) && node.args.find(a => a.base.value === asyncCallbackName)
+}
+
 function isFunction (node) {
   return node && node.constructor.name === 'Code'
 }
 
-function codify (str) {
-  const lines = str.split('\n').slice(1)
+function getAsyncCallbackName (node) {
+  return getMochaMethodBody(node).params[0].name.value
+}
+
+function getMochaMethodBody (node) {
+  if (isTestCall(node)) {
+    return node.args[1]
+  } else if (isHookCall(node)) {
+    return node.args[0]
+  }
+}
+
+function textify (str) {
+  const dirtyLines = str.split('\n')
+  const lines = dirtyLines.slice(1, dirtyLines.length - 1)
   const baseIndent = lines[0].search(/[^\s]/)
   return lines.map(line => line.slice(baseIndent)).join('\n')
 }

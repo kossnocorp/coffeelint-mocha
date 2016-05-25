@@ -1,6 +1,6 @@
 const coffeelint = require('coffeelint')
 const test = require('ava')
-const {codify} = require('../_lib/utils')
+const {textify} = require('../_lib/utils')
 
 const config = {
   'no_synchronous_tests': {
@@ -13,7 +13,7 @@ test('disallows to use synchronous tests', t => {
 
   t.plan(methods.length * 3)
   methods.forEach(method => {
-    const code = codify(`
+    const code = textify(`
       ${method} 'has synchronous tests', ->
     `)
     const errors = coffeelint.lint(code, config)
@@ -29,7 +29,7 @@ test('allows to use asynchronous tests', t => {
 
   t.plan(methods.length)
   methods.forEach(method => {
-    const code = codify(`
+    const code = textify(`
       ${method} 'has asynchronous tests', (done) ->
     `)
     const errors = coffeelint.lint(code, config)
@@ -43,7 +43,7 @@ test('disallows to use synchronous hooks', t => {
 
   t.plan(methods.length * 3)
   methods.forEach(method => {
-    const code = codify(`
+    const code = textify(`
       ${method} ->
     `)
     const errors = coffeelint.lint(code, config)
@@ -59,7 +59,7 @@ test('allows to use asynchronous hooks', t => {
 
   t.plan(methods.length)
   methods.forEach(method => {
-    const code = codify(`
+    const code = textify(`
       ${method} (done) ->
     `)
     const errors = coffeelint.lint(code, config)
@@ -69,7 +69,7 @@ test('allows to use asynchronous hooks', t => {
 })
 
 test('ignores unknown constructions', t => {
-  const code = codify(`
+  const code = textify(`
     it.trololo 'unknown construction', ->
   `)
   const errors = coffeelint.lint(code, config)
