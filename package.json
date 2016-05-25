@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "standard --verbose | snazzy",
-    "test": "nyc ava test.js src/**/test.js --source '!tmp'",
+    "test": "nyc ava **/test.js",
     "test-watch": "npm test -- --watch",
     "test-coverage-report": "nyc report --reporter=html",
     "test-coverage-coveralls": "nyc report --reporter=text-lcov | coveralls"
