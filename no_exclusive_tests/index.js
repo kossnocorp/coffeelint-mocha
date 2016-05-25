@@ -20,7 +20,7 @@ NoExclusiveTests.prototype.rule = {
 }
 
 NoExclusiveTests.prototype.lintAST = function (ast, astApi) {
-  ast.traverseChildren(false, node => {
+  ast.traverseChildren(true, node => {
     if (isExclusiveCall(node)) {
       this.errors.push(astApi.createError({
         lineNumber: node.locationData['first_line'] + 1

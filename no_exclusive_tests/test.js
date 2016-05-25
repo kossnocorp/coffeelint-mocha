@@ -15,7 +15,7 @@ test('disallows exclusive tests and suites', t => {
     'test.only', 'xtest.only',
     'describe.only', 'xdescribe.only',
     'context.only', 'xcontext.only',
-    'suite.only', 'xsuite.only',
+    'suite.only', 'xsuite.only'
   ]
 
   t.plan(methods.length * 3)

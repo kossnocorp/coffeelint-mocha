@@ -18,7 +18,7 @@ NoPendingTests.prototype.rule = {
 }
 
 NoPendingTests.prototype.lintAST = function (ast, astApi) {
-  ast.traverseChildren(false, node => {
+  ast.traverseChildren(true, node => {
     if (isPendingTest(node)) {
       this.errors.push(astApi.createError({
         lineNumber: node.locationData['first_line'] + 1

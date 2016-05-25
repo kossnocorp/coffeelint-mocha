@@ -19,7 +19,7 @@ HandleDoneCallback.prototype.rule = {
 }
 
 HandleDoneCallback.prototype.lintAST = function (ast, astApi) {
-  ast.traverseChildren(false, node => {
+  ast.traverseChildren(true, node => {
     if (isAsyncTest(node) || isAsyncHook(node)) {
       const asyncCallbackName = getAsyncCallbackName(node)
       var doneHandled = false

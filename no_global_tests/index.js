@@ -16,7 +16,7 @@ NoGlobalTests.prototype.rule = {
 }
 
 NoGlobalTests.prototype.lintAST = function (ast, astApi) {
-  ast.traverseChildren(false, node => {
+  ast.traverseChildren(true, node => {
     if (isScopeCall(node)) {
       return false
     } else if (isTestCall(node)) {

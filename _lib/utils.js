@@ -78,7 +78,7 @@ function isExclusiveCall (node) {
       'test.only', 'xtest.only',
       'describe.only', 'xdescribe.only',
       'context.only', 'xcontext.only',
-      'suite.only', 'xsuite.only',
+      'suite.only', 'xsuite.only'
     ])
 }
 
@@ -95,10 +95,12 @@ function includesExactCall (node, callStrs) {
 }
 
 function isExactCall (node, callStr) {
+  if (!node.variable || !node.variable.base) return false
+
   const chain = callStr.split('.')
   const matchesHead = chain[0] === node.variable.base.value
   const matchesLength = node.variable.properties.length === chain.length - 1
-  const matchesChain = node.variable.properties.map(p => p.name.value).join('.') === chain.slice(1).join('.')
+  const matchesChain = node.variable.properties.map(p => p.name && p.name.value).join('.') === chain.slice(1).join('.')
 
   return matchesHead && matchesLength && matchesChain
 }
@@ -117,7 +119,7 @@ function isAsyncCallbackCall (node, asyncCallbackName) {
 }
 
 function isCallWithAsyncCallbackInArgs (node, asyncCallbackName) {
-  return isCall(node) && node.args.find(a => a.base.value === asyncCallbackName)
+  return isCall(node) && node.args.find(a => a.base && a.base.value === asyncCallbackName)
 }
 
 function isFunction (node) {
